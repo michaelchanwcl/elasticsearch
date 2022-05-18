@@ -11,13 +11,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
 import java.net.InetAddress;
 
 @Configuration
 @Slf4j
-@EnableElasticsearchRepositories(basePackages = "com.example.elasticsearch.repository")
 public class Config {
 
     @Value("${elasticsearch.host}")
@@ -35,8 +33,8 @@ public class Config {
     /**
      * ??TransportClient??
      */
-    @Bean
-    public Client client() {
+    @Bean(name = "transportClient")
+    public TransportClient transportClient() {
         log.info("Elastic Search Start");
         TransportClient transportClient = null;
         try {
@@ -56,7 +54,12 @@ public class Config {
 
     @Bean
     public ElasticsearchOperations elasticsearchTemplate() {
-        return new ElasticsearchTemplate(client());
+        Client client = transportClient();
+        if (client != null) {
+            return new ElasticsearchTemplate(client);
+        } else {
+            throw new RuntimeException("???Elasticsearch??!");
+        }
     }
 
 }
