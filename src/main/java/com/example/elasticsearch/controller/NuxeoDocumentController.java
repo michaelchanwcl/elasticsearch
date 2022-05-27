@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/nuxeo")
+@RequestMapping("/api/nuxeodoc")
 public class NuxeoDocumentController {
     private final NuxeoDocumentService nuxeoDocumentService;
 
